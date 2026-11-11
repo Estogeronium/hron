@@ -244,7 +244,7 @@
   const CYR_SPELL_ALWAYS = new Set(["ГИБДД", "МЧС", "СССР", "США", "ЦСКА", "ФНС", "ВДНХ"]);
   const CYR_COMMON = new Set(["А", "И", "В", "К", "С", "У", "О", "Я", "ДО", "НА", "ЗА", "ИЗ", "ОТ", "ПО", "НЕ", "НИ", "ДА", "НО", "ЖЕ", "ЛИ", "ВЫ", "МЫ", "ОН", "ТЫ", "ОНА", "ОНИ", "ОНО", "ВСЕ", "ВСЁ", "ЕЩЁ", "ЕЩЕ", "КАК", "ТАК", "ЧТО", "КТО", "ГДЕ", "ДЛЯ", "БЕЗ", "ПРО", "ВОТ", "ТУТ", "ТАМ", "УЖЕ", "ИЛИ", "ЕГО", "ЕЁ", "ИХ", "ВАС", "НАС", "ВАМ", "НАМ", "ДВА", "ТРИ", "ДНЯ", "ДНИ", "ГОД", "МИР", "ДОМ", "СОН", "ЧАС", "РАЗ", "ДАР", "ЕДА", "ЧАЙ", "СОК", "ВОТ", "КОД", "ЛЕС", "САД", "ДЕНЬ", "ОДИН", "ВСЕМ", "ЭТО", "ТОТ", "ТЕ", "ТА", "ТО", "МОЙ", "ТВОЙ", "НОВ", "СО", "ВО", "КО", "ОБ", "ОБО", "ПОД", "НАД", "ПРИ", "ЧЕМ", "ЧЁМ", "ЕСЛИ", "АХ", "ОХ", "ЭХ", "УХ", "ОЙ", "ЭЙ", "ДЖ", "ЕЙ", "ИМ", "НЁМ", "НЕЙ", "ЕМУ", "ТОЖЕ", "ВАШ", "НАШ", "ДЕЛ", "МОЖ", "ЖДИ", "ИДИ", "БЕГИ", "ДАЙ", "ПЕЙ", "ЕШЬ", "НЕТ", "ДАЖЕ", "ВЕСЬ", "ХИТ", "ТОП", "ВАУ", "ОГО", "АГА", "УГУ"]);
   const LAT_AS_WORD = new Set(["NASA", "LEGO", "IKEA", "FIFA", "UEFA", "NATO", "ZARA", "OPEC", "AIDS", "LASIK", "ASAP_", "UNESCO", "UNICEF", "SIM", "PIN", "WOW", "OK", "OMG_"]);
-  const LAT_MAP = { IT: "ай-ти", AI: "эй-ай", PR: "пи-ар", HR: "эйч-ар", SMM: "эс-эм-эм", SEO: "сео", CEO: "си-и-оу", OK: "окей", TV: "ти-ви", VR: "ви-ар", AR: "эй-ар", USB: "ю-эс-би", QR: "кью-ар", NFC: "эн-эф-си", UX: "ю-экс", UI: "ю-ай", PC: "пи-си", DJ: "ди-джей", MVP: "эм-ви-пи", KPI: "кей-пи-ай", CRM: "си-ар-эм", B2B: "би-ту-би", B2C: "би-ту-си", FAQ: "эф-эй-кью", WI: "вай", SMS: "эс-эм-эс", GPS: "джи-пи-эс", PDF: "пи-ди-эф", VIP: "вип", WOW: "вау", SALE: "сейл", NEW: "нью", PRO: "про", MAX: "макс", LIVE: "лайв", FREE: "фри", TOP: "топ", HIT: "хит", BEST: "бест", ONLINE: "онлайн" };
+  const LAT_MAP = { IT: "ай-ти", AI: "эй-ай", PR: "пи-ар", HR: "эйч-ар", SMM: "эс-эм-эм", SEO: "сео", CEO: "си-и-оу", OK: "окей", TV: "ти-ви", VR: "ви-ар", VK: "вэ-ка", KFC: "кей-эф-си", HM: "эйч-энд-эм", BMW: "бэ-эм-вэ", MTV: "эм-ти-ви", AR: "эй-ар", USB: "ю-эс-би", QR: "кью-ар", NFC: "эн-эф-си", UX: "ю-экс", UI: "ю-ай", PC: "пи-си", DJ: "ди-джей", MVP: "эм-ви-пи", KPI: "кей-пи-ай", CRM: "си-ар-эм", B2B: "би-ту-би", B2C: "би-ту-си", FAQ: "эф-эй-кью", WI: "вай", SMS: "эс-эм-эс", GPS: "джи-пи-эс", PDF: "пи-ди-эф", VIP: "вип", WOW: "вау", SALE: "сейл", NEW: "нью", PRO: "про", MAX: "макс", LIVE: "лайв", FREE: "фри", TOP: "топ", HIT: "хит", BEST: "бест", ONLINE: "онлайн" };
 
   const ABBR = [
     [/т\.\s?е\./y, "то есть"],
@@ -292,6 +292,77 @@
   ];
 
   const TLD = { ru: "ру", com: "ком", net: "нет", org: "орг", io: "ай-оу", рф: "эр-эф", su: "эс-ю", me: "ми", app: "апп", ai: "эй-ай", pro: "про", info: "инфо", shop: "шоп", online: "онлайн", store: "стор", tv: "ти-ви", by: "бай", kz: "кей-зед" };
+
+
+  /* ---------- Латиница → кириллица ---------- */
+
+  // Английские слова и бренды, которые читаются не по буквам
+  const LAT_WORDS = {
+    whatsapp: "вотсап", telegram: "телеграм", viber: "вайбер", iphone: "айфон", ipad: "айпад", imac: "аймак", macbook: "макбук", airpods: "эйрподс", watch: "вотч",
+    apple: "эпл", google: "гугл", youtube: "ютуб", tiktok: "тикток", instagram: "инстаграм", facebook: "фейсбук", twitter: "твиттер", linkedin: "линкедин", pinterest: "пинтерест", reddit: "реддит", discord: "дискорд", twitch: "твич",
+    yandex: "яндекс", ozon: "озон", wildberries: "вайлдберриз", avito: "авито", lamoda: "ламода", samsung: "самсунг", xiaomi: "сяоми", huawei: "хуавей", honor: "хонор", realme: "реалми", oppo: "оппо", vivo: "виво", sony: "сони", lg: "эл-джи",
+    android: "андроид", windows: "виндоус", microsoft: "майкрософт", office: "офис", netflix: "нетфликс", spotify: "спотифай", zoom: "зум", skype: "скайп", chatgpt: "чат джи-пи-ти", openai: "опен эй-ай", claude: "клод",
+    wi: "вай", fi: "фай", wifi: "вайфай", bluetooth: "блютус", smart: "смарт", pro: "про", max: "макс", plus: "плюс", mini: "мини", ultra: "ультра", air: "эйр", lite: "лайт", note: "ноут", pad: "пад", phone: "фон", tab: "таб", book: "бук",
+    online: "онлайн", offline: "офлайн", shop: "шоп", store: "стор", market: "маркет", app: "апп", apps: "аппс", sale: "сейл", black: "блэк", friday: "фрайдей", cashback: "кэшбэк", delivery: "деливери", express: "экспресс",
+    food: "фуд", coffee: "кофе", cafe: "кафе", bar: "бар", club: "клаб", city: "сити", home: "хоум", house: "хаус", life: "лайф", style: "стайл", beauty: "бьюти", family: "фэмили", group: "груп", studio: "студио", design: "дизайн",
+    lab: "лаб", cloud: "клауд", mail: "мейл", gmail: "джимейл", email: "имейл", web: "веб", site: "сайт", digital: "диджитал", media: "медиа", news: "ньюс", tech: "тех", space: "спейс", world: "ворлд", land: "лэнд", park: "парк",
+    the: "зе", and: "энд", of: "оф", by: "бай", for: "фор", to: "ту", new: "нью", best: "бест", top: "топ", free: "фри", live: "лайв", love: "лав", my: "май", your: "ёр", you: "ю", we: "ви", go: "гоу", one: "уан", two: "ту",
+    start: "старт", up: "ап", team: "тим", sport: "спорт", fit: "фит", fitness: "фитнес", auto: "авто", bank: "банк", pay: "пэй", card: "кард", money: "мани", play: "плей", game: "гейм", games: "геймс", music: "мьюзик", kids: "кидс",
+    sber: "сбер", sberbank: "сбербанк", tinkoff: "тинькофф", tbank: "тэ-банк", alfa: "альфа", booking: "букинг", uber: "убер", nike: "найк", adidas: "адидас", puma: "пума", reebok: "рибок", ikea: "икеа", lego: "лего", zara: "зара",
+    coca: "кока", cola: "кола", pepsi: "пепси", mcdonalds: "макдоналдс", burger: "бургер", king: "кинг", starbucks: "старбакс", tesla: "тесла", toyota: "тойота", mercedes: "мерседес", volkswagen: "фольксваген", audi: "ауди",
+    summer: "саммер", winter: "винтер", spring: "спринг", autumn: "отэм", fresh: "фреш", happy: "хэппи", sunday: "сандей", party: "пати", beach: "бич", hotel: "отель", resort: "резорт",
+    hello: "хэллоу", hi: "хай", ok: "окей", okay: "окей", yes: "ес", no: "ноу", wow: "вау", like: "лайк", vibe: "вайб", hype: "хайп", brand: "бренд", marketing: "маркетинг", business: "бизнес", premium: "премиум", gold: "голд", black: "блэк",
+    www: "вэ-вэ-вэ", http: "эйч-ти-ти-пи", https: "эйч-ти-ти-пи-эс", com: "ком", net: "нет", org: "орг", info: "инфо",
+  };
+
+  const LAT_RULES = [
+    ["shch", "щ"], ["tion", "шн"], ["ight", "айт"], ["igh", "ай"],
+    ["sch", "ш"], ["zh", "ж"], ["kh", "х"], ["ch", "ч"], ["sh", "ш"], ["ts", "ц"], ["tz", "ц"], ["ph", "ф"], ["th", "т"], ["ck", "к"], ["qu", "кв"], ["wh", "в"],
+    ["aya", "ая"], ["oya", "оя"], ["iya", "ия"], ["eya", "ея"], ["uya", "уя"], ["aye", "ае"], ["oye", "ое"],
+    ["ya", "я"], ["yu", "ю"], ["yo", "ё"], ["ye", "е"], ["oo", "у"], ["ee", "и"], ["ea", "и"], ["ai", "ей"], ["ay", "ей"], ["ey", "ей"], ["oy", "ой"], ["oi", "ой"], ["au", "о"], ["aw", "о"], ["ou", "ау"],
+    ["a", "а"], ["b", "б"], ["d", "д"], ["e", "е"], ["f", "ф"], ["g", "г"], ["h", "х"], ["i", "и"], ["j", "дж"], ["k", "к"], ["l", "л"], ["m", "м"], ["n", "н"], ["o", "о"], ["p", "п"], ["q", "к"], ["r", "р"], ["s", "с"], ["t", "т"], ["u", "у"], ["v", "в"], ["w", "в"], ["x", "кс"], ["z", "з"],
+  ];
+  const LAT_SILENT_E = { a: "ей", i: "ай", o: "оу", u: "ю", e: "и" };
+  const LV = "aeiouy";
+
+  function translitCore(w) {
+    let out = "";
+    let i = 0;
+    while (i < w.length) {
+      const c = w[i];
+      if (c === "c") { out += /[eiy]/.test(w[i + 1] || "") ? "с" : w[i + 1] === "h" ? "ч" : "к"; i += w[i + 1] === "h" ? 2 : 1; continue; }
+      if (c === "y" && !/^(ya|yu|yo|ye)/.test(w.slice(i))) {
+        const prevV = i > 0 && LV.includes(w[i - 1]);
+        const nextV = LV.includes(w[i + 1] || "");
+        out += (i === 0 || prevV) && nextV ? "й" : prevV ? "й" : "и";
+        i++;
+        continue;
+      }
+      if (c === "e" && i === 0) { out += "э"; i++; continue; }
+      if (c === "o" && w[i + 1] === "w" && i + 2 === w.length) { out += "оу"; i += 2; continue; }
+      let hit = false;
+      for (const [k, v] of LAT_RULES) {
+        if (w.startsWith(k, i)) { out += v; i += k.length; hit = true; break; }
+      }
+      if (!hit) { out += c; i++; }
+    }
+    return out;
+  }
+
+  // «romashka» → «ромашка», «home» → «хоум», «WhatsApp» → «вотсап»
+  function translit(word) {
+    const w = word.toLowerCase().replace(/[’']/g, "");
+    let r = LAT_WORDS[w];
+    if (!r) {
+      // английское «немое e»: life, cake, store
+      const m = /^(.*[^aeiouy])([aeiou])([^aeiouyrw])e$/.exec(w);
+      const ruTranslit = /zh|kh|shch|ya|yu|ts|iy$|yy$/.test(w);
+      if (m && w.length >= 4 && !ruTranslit) r = translitCore(m[1]) + LAT_SILENT_E[m[2]] + translitCore(m[3]);
+      else if (/^[^aeiouy]*[aeiou]re$/.test(w) && !ruTranslit) r = translitCore(w.slice(0, -1));
+      else r = translitCore(w);
+    }
+    return /^[A-Z]/.test(word) ? r[0].toUpperCase() + r.slice(1) : r;
+  }
 
   /* ---------- Вспомогательные ---------- */
 
@@ -411,7 +482,15 @@
     return s
       .split(/([._\-])/)
       .filter(Boolean)
-      .map((p) => (p === "." ? "точка" : p === "_" ? "нижнее подчёркивание" : p === "-" ? "дефис" : /^\d+$/.test(p) ? readNumber(p, "m", "nom").words : p))
+      .map((p) => (p === "." ? "точка" : p === "_" ? "нижнее подчёркивание" : p === "-" ? "дефис" : /^\d+$/.test(p) ? readNumber(p, "m", "nom").words : readMixed(p)))
+      .join(" ");
+  }
+  // «shop24» → «шоп двадцать четыре»
+  function readMixed(p) {
+    return p
+      .split(/(\d+)/)
+      .filter(Boolean)
+      .map((x) => (/^\d+$/.test(x) ? readNumber(x, "m", "nom").words : /^[A-Za-z]+$/.test(x) ? (x.length <= 3 && x === x.toUpperCase() && !LAT_WORDS[x.toLowerCase()] ? spellLat(x) : translit(x).toLowerCase()) : x))
       .join(" ");
   }
   function readDomain(h) {
@@ -563,6 +642,9 @@
     if (w.length > 4 && /[AEIOUY]/.test(w)) return null;
     return spellLat(w);
   }, false);
+
+  // Латинские слова → кириллица
+  rule(/[A-Za-z]+(?:['’][A-Za-z]+)?/y, (m) => translit(m[0]));
 
   // Символы
   const SYM = [
