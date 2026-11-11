@@ -271,7 +271,8 @@
     [/д\.(?=\s?\d)/y, "дом"],
     [/кв\.(?=\s?\d)/y, "квартира"],
     [/стр\.(?=\s?\d)/y, "страница"],
-    [/тел\.(?=\s?[\d+(])/y, "телефон"],
+    [/тел\.(?=\s?[\d+(])/y, (c) => (c.prev === "по" ? "телефону" : "телефон")],
+    [/мес\./y, "месяц"],
     [/им\.(?=\s?\p{Lu})/uy, "имени"],
     [/г\.(?=\s?\p{Lu})/uy, "город"],
     [/обл\./y, "область"],
@@ -612,7 +613,7 @@
 
   // Сокращения с точкой
   ABBR.forEach(([re, w]) => {
-    rule(re, () => w);
+    rule(re, (m, c) => (typeof w === "function" ? w(c) : w));
   });
 
   // Аббревиатуры кириллицей
@@ -727,7 +728,9 @@
           if (isWordChar(before) && isWordChar(t[0])) t = " " + t;
           if (isWordChar(text[end]) && isWordChar(t[t.length - 1])) t += " ";
           // начало предложения — с заглавной
-          if (/^\p{Ll}/u.test(t) && /(^|[.!?…]["»”)]*\s*|\n\s*)$/u.test(text.slice(Math.max(0, i - 6), i)) && /[.!?…\n]|^$/.test(text.slice(0, i).trimEnd().slice(-1)))
+          // (смотрим на уже озвученный текст: «по тел. +7» — не начало предложения)
+          const said = (segs.map((x) => x.t).join("") + buf).replace(/[\s"«»”)(]+$/u, "");
+          if (/^\p{Ll}/u.test(t) && (said === "" || /[.!?…]$/.test(said) || /\n\s*$/.test(segs.map((x) => x.t).join("") + buf)))
             t = t[0].toUpperCase() + t.slice(1);
         }
         flush();
