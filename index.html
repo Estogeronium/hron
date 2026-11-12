@@ -118,18 +118,6 @@
         text-wrap: pretty;
       }
 
-      .layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 18px;
-        align-items: start;
-      }
-      @media (max-width: 860px) {
-        .layout {
-          grid-template-columns: minmax(0, 1fr);
-        }
-      }
-
       .card {
         background: var(--card);
         border: 1px solid var(--line-2);
@@ -384,7 +372,6 @@
 
       /* Как прочитает диктор */
       .spoken {
-        grid-column: 1 / -1;
         padding: 20px 24px 22px;
       }
       .spoken-head {
@@ -471,29 +458,173 @@
         transform: translate(-50%, 0);
       }
 
-      @media (max-width: 860px) {
+      /* ---------- Раскладка: панель сверху, две колонки ниже ---------- */
+      .panel {
+        position: sticky;
+        top: 12px;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1.15fr) minmax(0, 1fr);
+        gap: 0;
+        padding: 18px 0;
+        margin-bottom: 18px;
+        box-shadow: 0 6px 24px -18px rgba(20, 20, 45, 0.35);
+      }
+      .panel > div {
+        padding: 0 24px;
+        min-width: 0;
+      }
+      .panel > div + div {
+        border-left: 1px solid var(--line-2);
+      }
+      .p-time {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 170px;
+      }
+      .time b {
+        font-size: 56px;
+      }
+      .p-fit .bar {
+        margin: 10px 0 7px;
+      }
+      .rate-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 10px;
+      }
+      .rate-row .rate {
+        flex: 1;
+        margin: 0;
+      }
+      .rate-row .toggle {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .col-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 8px 14px 0 24px;
+      }
+      .col-head .label {
+        margin: 0;
+        white-space: nowrap;
+      }
+      .col-head .count {
+        white-space: nowrap;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .col-head .spacer {
+        flex: 1;
+      }
+      .editor {
+        min-height: 0;
+      }
+      textarea,
+      .spoken-text {
+        flex: 1 0 auto;
+        min-height: 360px;
+        font-size: 17px;
+        line-height: 1.62;
+        padding: 10px 24px 18px;
+      }
+      textarea {
+        border-radius: 0;
+      }
+      .spoken {
+        padding: 0;
+      }
+      .spoken-text {
+        color: var(--ink-2);
+      }
+      .spoken-text mark {
+        padding: 1px 2px;
+      }
+      .col-foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        padding: 12px 24px 14px;
+        border-top: 1px solid var(--line-2);
+        font-size: 12.5px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .col-foot b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .col-foot i {
+        font-style: normal;
+      }
+
+      @media (max-width: 960px) {
+        .panel {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+        .p-tempo {
+          grid-column: 1 / -1;
+          border-left: 0 !important;
+          border-top: 1px solid var(--line-2);
+          margin-top: 16px;
+          padding-top: 16px !important;
+        }
+      }
+      @media (max-width: 720px) {
         body {
           padding: 28px 16px 28px;
         }
         .panel {
           position: static;
+          grid-template-columns: minmax(0, 1fr);
+          padding: 18px 0 16px;
+        }
+        .panel > div {
+          padding: 0 18px;
+        }
+        .panel > div + div {
+          border-left: 0;
+          border-top: 1px solid var(--line-2);
+          margin-top: 16px;
+          padding-top: 16px;
         }
         .time b {
-          font-size: 54px;
+          font-size: 52px;
         }
-        textarea {
-          min-height: 220px;
-          font-size: 16px;
-          padding: 18px 18px 10px;
+        .cols {
+          grid-template-columns: minmax(0, 1fr);
         }
-        .editor {
-          min-height: 0;
-        }
-        .editor-bar {
+        .col-head {
           padding-left: 18px;
         }
-        .spoken {
-          padding: 18px;
+        textarea,
+        .spoken-text {
+          min-height: 200px;
+          font-size: 16px;
+          padding: 8px 18px 16px;
+        }
+        .spoken-text {
+          min-height: 0;
+        }
+        .col-foot {
+          padding: 11px 18px 13px;
         }
       }
     </style>
@@ -508,60 +639,64 @@
         </p>
       </header>
 
-      <div class="layout">
-        <section class="card editor" aria-label="Текст">
+      <section class="card panel" aria-live="polite" aria-label="Результат и настройки">
+        <div class="p-time">
+          <div class="time"><b id="sec">0</b><span>сек</span></div>
+          <div class="time-sub" id="sec-sub"></div>
+        </div>
+
+        <div class="p-fit">
+          <div class="label">Длина ролика</div>
+          <div class="chips" id="chips" role="group" aria-label="Длина ролика"></div>
+          <div class="bar" id="bar"><i></i></div>
+          <div class="fit-text" id="fit-text"></div>
+        </div>
+
+        <div class="p-tempo">
+          <div class="label">Темп</div>
+          <div class="seg" id="presets" role="group" aria-label="Темп чтения"></div>
+          <div class="rate-row">
+            <label class="rate">
+              <input id="rate" type="range" min="3" max="10" step="0.1" value="5" aria-label="Слогов в секунду" />
+              <output id="rate-out">5,0 сл/с</output>
+            </label>
+            <label class="toggle"><input type="checkbox" id="pauses" checked /> Паузы</label>
+          </div>
+        </div>
+      </section>
+
+      <div class="cols">
+        <section class="card col editor" aria-label="Ваш текст">
+          <div class="col-head">
+            <div class="label">Ваш текст</div>
+            <span class="spacer"></span>
+            <button class="ghost" id="sample" type="button">Пример</button>
+            <button class="ghost" id="clear" type="button">Очистить</button>
+          </div>
           <textarea
             id="text"
             spellcheck="true"
             placeholder="Вставьте текст ролика…"
             aria-label="Текст для озвучки"
           ></textarea>
-          <div class="editor-bar">
-            <span id="words-inline">0 слов</span>
-            <span class="spacer"></span>
-            <button class="ghost" id="sample" type="button">Пример</button>
-            <button class="ghost" id="clear" type="button">Очистить</button>
+          <div class="col-foot">
+            <span><b id="c-all">0</b> с пробелами</span>
+            <span><b id="c-nosp">0</b> без пробелов</span>
+            <span><b id="c-words">0</b> <i id="w-label">слов</i></span>
           </div>
         </section>
 
-        <aside class="card panel" aria-live="polite">
-          <div class="time"><b id="sec">0</b><span>сек</span></div>
-          <div class="time-sub" id="sec-sub"></div>
-
-          <div class="fit">
-            <div class="chips" id="chips" role="group" aria-label="Длина ролика"></div>
-            <div class="bar" id="bar"><i></i></div>
-            <div class="fit-text" id="fit-text"></div>
-          </div>
-
-          <div class="block">
-            <div class="label">Темп</div>
-            <div class="seg" id="presets" role="group" aria-label="Темп чтения"></div>
-            <label class="rate">
-              <input id="rate" type="range" min="3" max="10" step="0.1" value="5" aria-label="Слогов в секунду" />
-              <output id="rate-out">5,0 сл/с</output>
-            </label>
-            <label class="toggle"><input type="checkbox" id="pauses" checked /> Учитывать паузы</label>
-          </div>
-
-          <div class="block">
-            <div class="stats">
-              <div class="stat"><b id="c-all">0</b><span>символов с пробелами</span></div>
-              <div class="stat"><b id="c-nosp">0</b><span>без пробелов</span></div>
-              <div class="stat"><b id="c-words">0</b><span>слов</span></div>
-              <div class="stat"><b id="c-syl">0</b><span>слогов в озвучке</span></div>
-            </div>
-          </div>
-        </aside>
-
-        <section class="card spoken" aria-label="Как прочитает диктор">
-          <div class="spoken-head">
+        <section class="card col spoken" aria-label="Как прочитает диктор">
+          <div class="col-head">
             <div class="label">Как прочитает диктор</div>
             <span class="count" id="repl"></span>
             <span class="spacer"></span>
             <button class="ghost" id="copy" type="button">Скопировать</button>
           </div>
           <div class="spoken-text" id="spoken"></div>
+          <div class="col-foot">
+            <span><b id="c-syl">0</b> <i id="s-label">слогов</i></span>
+          </div>
         </section>
       </div>
 
@@ -790,7 +925,8 @@
           $("c-nosp").textContent = nf0.format(r.charsNoSpaces);
           $("c-words").textContent = nf0.format(r.words);
           $("c-syl").textContent = nf0.format(r.syllables);
-          $("words-inline").textContent = nf0.format(r.words) + " " + plural(r.words, "слово", "слова", "слов");
+          $("w-label").textContent = plural(r.words, "слово", "слова", "слов");
+          $("s-label").textContent = plural(r.syllables, "слог", "слога", "слогов") + " в озвучке";
 
           // Как прочитает диктор
           let html = "";
